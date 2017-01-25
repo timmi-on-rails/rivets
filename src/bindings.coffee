@@ -99,8 +99,11 @@ class Rivets.Binding
         observer.unobserve() for observer in @dependencies
         @dependencies = []
 
-        if (@model = @observer.target)? and @options.dependencies?.length
-          for dependency in @options.dependencies
+        if (@model = @observer.target)? 
+          mergedDependencies = @options.dependencies ? []
+          mergedDependencies = mergedDependencies.concat(Rivets.public.dependencyMap(@model, @observer.key.path))
+        
+          for dependency in mergedDependencies
             observer = @observe @model, dependency, @sync
             @dependencies.push observer
 
@@ -133,10 +136,10 @@ class Rivets.Binding
     @parseTarget()
     @binder.bind?.call @, @el
     
-    mergedDependencies = @options.dependencies ? []
-    mergedDependencies = mergedDependencies.concat(Rivets.public.dependencyMap({model: @model, binder: @binder, el: @el, plain: @, view: @view }))
-   
-    if @model? and mergedDependencies.length
+    if @model? 
+      mergedDependencies = @options.dependencies ? []
+      mergedDependencies = mergedDependencies.concat(Rivets.public.dependencyMap(@model, @observer.key.path))
+      
       for dependency in mergedDependencies
         observer = @observe @model, dependency, @sync
         @dependencies.push observer

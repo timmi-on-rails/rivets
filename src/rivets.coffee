@@ -47,7 +47,7 @@ Rivets =
     executeFunctions: false,
 
     # Default dependencyMap
-    dependencyMap: (obj) -> return []
+    dependencyMap: (obj, key) -> return []
 
     # Alias for index in rv-each binder
     iterationAlias : (modelName) ->

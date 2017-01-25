@@ -23,7 +23,7 @@
       rootInterface: '.',
       preloadData: true,
       executeFunctions: false,
-      dependencyMap: function(obj) {
+      dependencyMap: function(obj, key) {
         return [];
       },
       iterationAlias: function(modelName) {
@@ -657,9 +657,9 @@
     };
 
     Binding.prototype.sync = function() {
-      var dependency, observer;
+      var dependency, mergedDependencies, observer;
       return this.set((function() {
-        var _i, _j, _len, _len1, _ref1, _ref2, _ref3;
+        var _i, _j, _len, _len1, _ref1, _ref2;
         if (this.observer) {
           if (this.model !== this.observer.target) {
             _ref1 = this.dependencies;
@@ -668,10 +668,11 @@
               observer.unobserve();
             }
             this.dependencies = [];
-            if (((this.model = this.observer.target) != null) && ((_ref2 = this.options.dependencies) != null ? _ref2.length : void 0)) {
-              _ref3 = this.options.dependencies;
-              for (_j = 0, _len1 = _ref3.length; _j < _len1; _j++) {
-                dependency = _ref3[_j];
+            if ((this.model = this.observer.target) != null) {
+              mergedDependencies = (_ref2 = this.options.dependencies) != null ? _ref2 : [];
+              mergedDependencies = mergedDependencies.concat(Rivets["public"].dependencyMap(this.model, this.observer.key.path));
+              for (_j = 0, _len1 = mergedDependencies.length; _j < _len1; _j++) {
+                dependency = mergedDependencies[_j];
                 observer = this.observe(this.model, dependency, this.sync);
                 this.dependencies.push(observer);
               }
@@ -710,15 +711,9 @@
       if ((_ref1 = this.binder.bind) != null) {
         _ref1.call(this, this.el);
       }
-      mergedDependencies = (_ref2 = this.options.dependencies) != null ? _ref2 : [];
-      mergedDependencies = mergedDependencies.concat(Rivets["public"].dependencyMap({
-        model: this.model,
-        binder: this.binder,
-        el: this.el,
-        plain: this,
-        view: this.view
-      }));
-      if ((this.model != null) && mergedDependencies.length) {
+      if (this.model != null) {
+        mergedDependencies = (_ref2 = this.options.dependencies) != null ? _ref2 : [];
+        mergedDependencies = mergedDependencies.concat(Rivets["public"].dependencyMap(this.model, this.observer.key.path));
         for (_i = 0, _len = mergedDependencies.length; _i < _len; _i++) {
           dependency = mergedDependencies[_i];
           observer = this.observe(this.model, dependency, this.sync);
