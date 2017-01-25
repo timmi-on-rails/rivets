@@ -134,10 +134,8 @@ class Rivets.Binding
     @binder.bind?.call @, @el
     
     mergedDependencies = @options.dependencies ? []
-    mergedDependencies = mergedDependencies.concat(Rivets.public.dependencyMap(@model))
-    
-    console.log(mergedDependencies)
-
+    mergedDependencies = mergedDependencies.concat(Rivets.public.dependencyMap({model: @model, binder: @binder, el: @el, plain: @, view: @view }))
+   
     if @model? and mergedDependencies.length
       for dependency in mergedDependencies
         observer = @observe @model, dependency, @sync

@@ -711,8 +711,13 @@
         _ref1.call(this, this.el);
       }
       mergedDependencies = (_ref2 = this.options.dependencies) != null ? _ref2 : [];
-      mergedDependencies = mergedDependencies.concat(Rivets["public"].dependencyMap(this.model));
-      console.log(mergedDependencies);
+      mergedDependencies = mergedDependencies.concat(Rivets["public"].dependencyMap({
+        model: this.model,
+        binder: this.binder,
+        el: this.el,
+        plain: this,
+        view: this.view
+      }));
       if ((this.model != null) && mergedDependencies.length) {
         for (_i = 0, _len = mergedDependencies.length; _i < _len; _i++) {
           dependency = mergedDependencies[_i];
