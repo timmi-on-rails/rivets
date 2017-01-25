@@ -133,7 +133,7 @@ class Rivets.Binding
     @parseTarget()
     @binder.bind?.call @, @el
     
-    mergedDependencies = @options.dependencies or []
+    mergedDependencies = @options.dependencies ? []
     mergedDependencies.push Rivets.public.dependencyMap(@model)
     
     if @model? and mergedDependencies.length

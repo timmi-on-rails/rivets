@@ -705,12 +705,12 @@
     };
 
     Binding.prototype.bind = function() {
-      var dependency, mergedDependencies, observer, _i, _len, _ref1;
+      var dependency, mergedDependencies, observer, _i, _len, _ref1, _ref2;
       this.parseTarget();
       if ((_ref1 = this.binder.bind) != null) {
         _ref1.call(this, this.el);
       }
-      mergedDependencies = this.options.dependencies || [];
+      mergedDependencies = (_ref2 = this.options.dependencies) != null ? _ref2 : [];
       mergedDependencies.push(Rivets["public"].dependencyMap(this.model));
       if ((this.model != null) && mergedDependencies.length) {
         for (_i = 0, _len = mergedDependencies.length; _i < _len; _i++) {
