@@ -11,7 +11,7 @@
     __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
   Rivets = {
-    options: ['prefix', 'templateDelimiters', 'rootInterface', 'preloadData', 'handler', 'executeFunctions'],
+    options: ['prefix', 'templateDelimiters', 'rootInterface', 'preloadData', 'handler', 'executeFunctions', 'dependencyMap'],
     extensions: ['binders', 'formatters', 'components', 'adapters'],
     "public": {
       binders: {},
@@ -23,6 +23,9 @@
       rootInterface: '.',
       preloadData: true,
       executeFunctions: false,
+      dependencyMap: function(obj) {
+        return [];
+      },
       iterationAlias: function(modelName) {
         return '%' + modelName + '%';
       },
@@ -702,15 +705,16 @@
     };
 
     Binding.prototype.bind = function() {
-      var dependency, observer, _i, _len, _ref1, _ref2, _ref3;
+      var dependency, mergedDependencies, observer, _i, _len, _ref1;
       this.parseTarget();
       if ((_ref1 = this.binder.bind) != null) {
         _ref1.call(this, this.el);
       }
-      if ((this.model != null) && ((_ref2 = this.options.dependencies) != null ? _ref2.length : void 0)) {
-        _ref3 = this.options.dependencies;
-        for (_i = 0, _len = _ref3.length; _i < _len; _i++) {
-          dependency = _ref3[_i];
+      mergedDependencies = this.options.dependencies || [];
+      mergedDependencies.push(Rivets["public"].dependencyMap(this.model));
+      if ((this.model != null) && mergedDependencies.length) {
+        for (_i = 0, _len = mergedDependencies.length; _i < _len; _i++) {
+          dependency = mergedDependencies[_i];
           observer = this.observe(this.model, dependency, this.sync);
           this.dependencies.push(observer);
         }

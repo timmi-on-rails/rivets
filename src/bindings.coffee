@@ -132,9 +132,12 @@ class Rivets.Binding
   bind: =>
     @parseTarget()
     @binder.bind?.call @, @el
-
-    if @model? and @options.dependencies?.length
-      for dependency in @options.dependencies
+    
+    mergedDependencies = @options.dependencies or []
+    mergedDependencies.push Rivets.public.dependencyMap(@model)
+    
+    if @model? and mergedDependencies.length
+      for dependency in mergedDependencies
         observer = @observe @model, dependency, @sync
         @dependencies.push observer
 
