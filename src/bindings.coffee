@@ -136,7 +136,7 @@ class Rivets.Binding
     mergedDependencies = @options.dependencies ? []
     mergedDependencies = mergedDependencies.concat(Rivets.public.dependencyMap(@model))
     
-    console.log(@options.dependencies)
+    console.log(mergedDependencies)
 
     if @model? and mergedDependencies.length
       for dependency in mergedDependencies
